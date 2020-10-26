@@ -56,7 +56,7 @@ service apache2 restart
 
 ### Access Repository in Browser
 
-[[http://192.168.56.129/svn/myrepo/]]
+[[http://***.168.56.129/svn/myrepo/]]
 
 
 ### Import Project to the SVN Repository
@@ -74,13 +74,7 @@ Add templates directory to the repository using the svn command below.
  svn import -m 'Initial import' ~/svn-templates/ file:///var/lib/svn/myrepo/ --username admin --password Qwe12345!
 </code></pre>
 
-<pre><code class="text">
-svnsync init  --username admin --password Qwe12345!   http://10.226.179.208/svn/myrepo  --allow-non-empty   file:///var/lib/svn/myrepo/ ${REVISION}
-svnsync init  --username admin --password Qwe12345!   http://10.226.179.206/svn/myrepo  --allow-non-empty   file:///var/lib/svn/myrepo/ ${REVISION}
- svnsync init  --username admin --password Qwe12345!   http://10.226.179.207/svn/myrepo  --allow-non-empty   file:///var/lib/svn/myrepo/ ${REVISION}
-svnsync sync --username admin --password Qwe12345! http://10.226.179.207/svn/myrepo
-svnsync sync --username admin --password Qwe12345! http://10.226.179.206/svn/myrepo
-</code></pre>
+
 
 nano /var/lib/svn/myrepo/hooks/pre-revprop-change on master
 
@@ -88,8 +82,8 @@ nano /var/lib/svn/myrepo/hooks/pre-revprop-change on master
 #!/bin/sh
 REVISION=${2}
 # Launch (backgrounded) sync jobs for each slave server.
-svnsync copy-revprops http://10.226.179.206/svn/myrepo ${REVISION} &
-svnsync copy-revprops http://10.226.179.207/svn/myrepo ${REVISION} &
+svnsync copy-revprops http://**.226.179.206/svn/myrepo ${REVISION} &
+svnsync copy-revprops http://**.226.179.207/svn/myrepo ${REVISION} &
 exit 0
 
 </code></pre>
@@ -99,8 +93,8 @@ nano /var/lib/svn/myrepo/hooks/post-commit on master
 <pre><code class="text">
 #!/bin/sh
 # Launch (backgrounded) sync jobs for each slave server.
-svnsync sync --username admin --password Qwe12345! http://10.226.179.206/svn/myrepo &
-svnsync sync --username admin --password Qwe12345! http://10.226.179.207/svn/myrepo &
+svnsync sync --username admin --password Qwe12345! http://**.226.179.206/svn/myrepo &
+svnsync sync --username admin --password Qwe12345! http://**.226.179.207/svn/myrepo &
 
 </code></pre>
 
@@ -108,3 +102,11 @@ chmod +x /var/lib/svn/myrepo/hooks/pre-revprop-change on master
 
 chmod +x /var/lib/svn/myrepo/hooks/post-commit on master
 
+
+<pre><code class="text">
+svnsync init  --username admin --password Qwe12345!   http://**.226.179.208/svn/myrepo  --allow-non-empty   file:///var/lib/svn/myrepo/ ${REVISION}
+svnsync init  --username admin --password Qwe12345!   http://**.226.179.206/svn/myrepo  --allow-non-empty   file:///var/lib/svn/myrepo/ ${REVISION}
+ svnsync init  --username admin --password Qwe12345!   http://**.226.179.207/svn/myrepo  --allow-non-empty   file:///var/lib/svn/myrepo/ ${REVISION}
+svnsync sync --username admin --password Qwe12345! http://**.226.179.207/svn/myrepo
+svnsync sync --username admin --password Qwe12345! http://**.226.179.206/svn/myrepo
+</code></pre>
